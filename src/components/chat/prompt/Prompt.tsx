@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type ChatMessage } from '~/utils/messages';
+import { type ChatMessage } from '~/services/messages';
 
 export interface PromptProps {
   onSubmit: (message: ChatMessage) => void;

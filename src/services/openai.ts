@@ -3,13 +3,14 @@ import type {
   ChatCompletionRequestMessage,
   ChatCompletionResponseMessage,
 } from 'openai';
+import { useEffect, useState } from 'react';
 
 type UsageListener = (cost: number) => void;
 
 let totalCost = 0;
 const usageListeners: UsageListener[] = [];
 
-export function onUsageChange(listener: UsageListener) {
+function onUsageChange(listener: UsageListener) {
   usageListeners.push(listener);
   return () => {
     const index = usageListeners.indexOf(listener);
@@ -26,6 +27,12 @@ function addUsageCost(cost: number) {
   });
 }
 
+export function useUsageCost() {
+  const [cost, setCost] = useState(0);
+  useEffect(() => onUsageChange(setCost), []);
+  return cost;
+}
+
 export async function createChatCompletion(
   messages: ChatCompletionRequestMessage[]
 ): Promise<ChatCompletionResponseMessage | undefined> {
@@ -38,12 +45,10 @@ export async function createChatCompletion(
   return message;
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function generateImage(prompt: string) {
-  throw new Error('Not implemented yet');
-  /*const { url, cost } = await api.generateImage.query(prompt);
+  const { url, cost } = await api.openai.generateImage.query(prompt, {});
   if (cost > 0) {
     addUsageCost(cost);
   }
-  return url;*/
+  return url;
 }

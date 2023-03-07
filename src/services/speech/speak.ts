@@ -31,4 +31,4 @@ export async function speak(text: string) {
   await play(buffer);*/
 }
 
-(window as { speak?: typeof speak }).speak = speak;
+(globalThis as { speak?: typeof speak }).speak = speak;

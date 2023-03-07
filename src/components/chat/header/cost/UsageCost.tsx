@@ -1,12 +1,5 @@
-import { useEffect, useState } from 'react';
-import { onUsageChange } from '../services/openai';
+import { useUsageCost } from '~/services/openai';
 import styles from './UsageCost.module.css';
-
-function useUsageCost() {
-  const [cost, setCost] = useState(0);
-  useEffect(() => onUsageChange(setCost), []);
-  return cost;
-}
 
 export default function UsageCost() {
   const usageCost = useUsageCost();
