@@ -19,6 +19,7 @@
     "@trpc/next": "^10.9.0",
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
+    "googlethis": "^1.7.1",
     "next": "^13.2.3",
     "next-auth": "^4.20.1",
     "openai": "^3.2.1",

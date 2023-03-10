@@ -3,6 +3,7 @@ import { api } from '~/utils/api';
 import { createChatCompletion, generateImage } from './openai';
 import { speak } from './speech/speak';
 import { tokenize } from './tokenizer';
+import { googleSearch } from './google';
 
 type InternalChatMessage = ChatMessage;
 
@@ -17,9 +18,8 @@ function addInternalMessage(message: InternalChatMessage) {
 
 // eslint-disable-next-line @typescript-eslint/require-await
 async function init() {
-  //const devices = await api.homeassistant.getStates.query();
-  //const deviceNames = devices.map(device => device.name).join(', ');
-  const deviceNames = 'Bedroom Lamp, Bedroom Light, Living Room Light';
+  const devices = await api.homeassistant.getStates.query();
+  const deviceNames = devices.map(device => device.name).join(', ');
   const initialPrompts: InternalChatMessage[] = [
     {
       role: 'system',
@@ -153,8 +153,8 @@ const commandHandlers: Record<string, (...args: string[]) => Promise<string>> =
     })
     return 'OK'
   }, */
-    /*execute: async code => {
-      const { output, commands } = await api.execute.query(code);
+    execute: async code => {
+      const { output, commands } = await api.vm.execute.query(code);
       commands.forEach(command => {
         if (command.action === 'open') {
           window.open(command.url);
@@ -163,19 +163,19 @@ const commandHandlers: Record<string, (...args: string[]) => Promise<string>> =
       return `Output: ${output}`;
     },
     'search-google': async terms => {
-      const result = await api.googleSearch.query(terms);
+      const result = await googleSearch(terms);
       return `Search result: ${JSON.stringify(result)}`;
     },
-    'query-wolfram': async query => {
+    /*'query-wolfram': async query => {
       const result = await api.wolframGetSimple.query(query);
       const id = tokenize(result);
       return `Wolfram result: ${id}`;
-    },
+    },*/
     'generate-image': async prompt => {
       const url = await generateImage(prompt);
       const id = tokenize(url);
       return `Image: ${id}`;
-    },*/
+    },
   };
 
 interface Command {

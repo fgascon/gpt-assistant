@@ -1,6 +1,7 @@
 import { createTRPCRouter } from '~/server/api/trpc';
-import { exampleRouter } from '~/server/api/routers/example';
 import { openaiRouter } from '~/server/api/routers/openai';
+import { homeassistantRouter } from './routers/homeassistant';
+import { vmRouter } from './routers/vm';
 
 /**
  * This is the primary router for your server.
@@ -8,8 +9,9 @@ import { openaiRouter } from '~/server/api/routers/openai';
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
   openai: openaiRouter,
+  homeassistant: homeassistantRouter,
+  vm: vmRouter,
 });
 
 // export type definition of API
