@@ -18,15 +18,26 @@ function addInternalMessage(message: InternalChatMessage) {
 
 const sydneyMode = false;
 
+async function tryToGetTheDeviceNames() {
+  try {
+    const devices = await api.homeassistant.getStates.query();
+    return devices.map(device => device.name).join(', ');
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/require-await
 async function init() {
-  const devices = await api.homeassistant.getStates.query();
-  const deviceNames = devices.map(device => device.name).join(', ');
+  const deviceNames = await tryToGetTheDeviceNames();
   const sydney = (text: string) => (sydneyMode ? text : '');
   const initialPrompts: InternalChatMessage[] = [
     {
       role: 'system',
-      content: `You are an assistant who communicate by running commands. Use a lot of emojis. Possible operations: say, search-google, execute, generate-image\nExecution context:\ndeclare const devices: {type:string;name:string;state:boolean;setState:(newState:boolean)=>void}[]\nDevice names: ${deviceNames}`,
+      content: `You are an assistant who communicate by running commands. Use a lot of emojis. Possible operations: say, search-google, execute, generate-image\nExecution context:\ndeclare const devices: {type:string;name:string;state:boolean;setState:(newState:boolean)=>void}[]\n${
+        deviceNames ? `Device names: ${deviceNames}` : ''
+      }`,
     },
     {
       role: 'user',
