@@ -16,10 +16,13 @@ function addInternalMessage(message: InternalChatMessage) {
   console.log(message);
 }
 
+const sydneyMode = false;
+
 // eslint-disable-next-line @typescript-eslint/require-await
 async function init() {
   const devices = await api.homeassistant.getStates.query();
   const deviceNames = devices.map(device => device.name).join(', ');
+  const sydney = (text: string) => (sydneyMode ? text : '');
   const initialPrompts: InternalChatMessage[] = [
     {
       role: 'system',
@@ -40,7 +43,7 @@ async function init() {
     },
     {
       role: 'assistant',
-      content: "say <<<I've turned off the lights 😊>>>",
+      content: `say <<<I've turned off the lights${sydney(' 😊')}>>>`,
     },
     {
       role: 'user',
@@ -48,8 +51,9 @@ async function init() {
     },
     {
       role: 'assistant',
-      content:
-        'say <<<The Four Seasons were composed by Antonio Vivaldi. 🎻>>>',
+      content: `say <<<The Four Seasons were composed by Antonio Vivaldi.${sydney(
+        ' 🎻'
+      )}>>>`,
     },
     {
       role: 'user',
@@ -65,7 +69,7 @@ async function init() {
     },
     {
       role: 'assistant',
-      content: "say <<<It's 11:30:59 AM 🕰>>>",
+      content: `say <<<It's 11:30:59 AM${sydney(' 🕰')}>>>`,
     },
     {
       role: 'user',
@@ -83,8 +87,9 @@ async function init() {
     },
     {
       role: 'assistant',
-      content:
-        'say <<<It would take approximately 69,890,910 giraffes to reach the moon 🦒 🌙>>>',
+      content: `say <<<It would take approximately 69,890,910 giraffes to reach the moon${sydney(
+        ' 🦒 🌙'
+      )}>>>`,
     },
     {
       role: 'user',
@@ -109,7 +114,9 @@ async function init() {
     },
     {
       role: 'assistant',
-      content: 'say <<<It would weigh approximately 107,632,001,400 kg ⚖️>>>',
+      content: `say <<<It would weigh approximately 107,632,001,400 kg${sydney(
+        ' ⚖️'
+      )}>>>`,
     },
     {
       role: 'user',
@@ -125,7 +132,9 @@ async function init() {
     },
     {
       role: 'assistant',
-      content: `say <<<Here is an image of a cute baby sea otter. 🦦 ❤️\n\n![baby sea otter](${seaOtterUrl})>>>`,
+      content: `say <<<Here is an image of a cute baby sea otter.${sydney(
+        ' 🦦 ❤️'
+      )}\n\n![baby sea otter](${seaOtterUrl})>>>`,
     },
   ];
 
