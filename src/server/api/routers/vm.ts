@@ -12,28 +12,37 @@ interface OpenCommand {
 
 type Command = OpenCommand;
 
+async function tryToGetDevices(promises: Array<Promise<void>>) {
+  try {
+    const states = await getStates();
+    return states.map(state => ({
+      id: state.id,
+      type: 'light',
+      state: state.state === 'on',
+      name: state.name,
+      setState: (newState: boolean) => {
+        promises.push(
+          (async () => {
+            await callService({
+              entityID: state.id,
+              domain: state.id.split('.')[0] ?? '',
+              service: newState ? 'turn_on' : 'turn_off',
+            });
+          })()
+        );
+      },
+    }));
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
 async function execute(code: string) {
   const promises: Array<Promise<void>> = [];
   let output = '';
 
-  const states = await getStates();
-  const devices = states.map(state => ({
-    id: state.id,
-    type: 'light',
-    state: state.state === 'on',
-    name: state.name,
-    setState: (newState: boolean) => {
-      promises.push(
-        (async () => {
-          await callService({
-            entityID: state.id,
-            domain: state.id.split('.')[0] ?? '',
-            service: newState ? 'turn_on' : 'turn_off',
-          });
-        })()
-      );
-    },
-  }));
+  const devices = await tryToGetDevices(promises);
 
   function log(...args: unknown[]) {
     output += args.map(arg => inspect(arg)).join(' ') + '\n';
