@@ -1,4 +1,7 @@
 import { search } from 'googlethis';
+import { z } from 'zod';
+
+import { createTRPCRouter, protectedProcedure } from '~/server/api/trpc';
 
 function cleanup<T extends Record<string, unknown>>(obj: T): Partial<T> {
   const output: Partial<T> = {};
@@ -15,7 +18,7 @@ function cleanup<T extends Record<string, unknown>>(obj: T): Partial<T> {
   return output;
 }
 
-export async function googleSearch(terms: string) {
+async function googleSearch(terms: string) {
   const { results, featured_snippet, knowledge_panel, unit_converter } =
     await search(terms, {
       page: 0,
@@ -54,3 +57,9 @@ export async function googleSearch(terms: string) {
     },
   };
 }
+
+export const googleRouter = createTRPCRouter({
+  search: protectedProcedure.input(z.string()).query(async req => {
+    return await googleSearch(req.input);
+  }),
+});

@@ -3,7 +3,6 @@ import { api } from '~/utils/api';
 import { createChatCompletion, generateImage } from './openai';
 import { speak } from './speech/speak';
 import { tokenize } from './tokenizer';
-import { googleSearch } from './google';
 
 type InternalChatMessage = ChatMessage;
 
@@ -183,7 +182,7 @@ const commandHandlers: Record<string, (...args: string[]) => Promise<string>> =
       return `Output: ${output}`;
     },
     'search-google': async terms => {
-      const result = await googleSearch(terms);
+      const result = await api.google.search.query(terms);
       return `Search result: ${JSON.stringify(result)}`;
     },
     /*'query-wolfram': async query => {

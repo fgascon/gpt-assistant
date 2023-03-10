@@ -1,5 +1,6 @@
 import { createTRPCRouter } from '~/server/api/trpc';
-import { openaiRouter } from '~/server/api/routers/openai';
+import { openaiRouter } from './routers/openai';
+import { googleRouter } from './routers/google';
 import { homeassistantRouter } from './routers/homeassistant';
 import { vmRouter } from './routers/vm';
 
@@ -10,6 +11,7 @@ import { vmRouter } from './routers/vm';
  */
 export const appRouter = createTRPCRouter({
   openai: openaiRouter,
+  google: googleRouter,
   homeassistant: homeassistantRouter,
   vm: vmRouter,
 });
